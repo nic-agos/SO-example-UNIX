@@ -1,0 +1,11 @@
+Questo esempio sulla parte sicurezza (buffer overflow) sono sviluppati/configurati per ambiente:
+Linux x86_64 GNU  - gcc version 7.3.1 
+
+To execute this example:
+
+./.print-string 72 | ./a.out
+
+To use make file:
+make all
+make stack-protect
+make position-independent
