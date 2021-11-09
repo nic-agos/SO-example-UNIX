@@ -16,11 +16,12 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+    // vogliamo attuare una gestione specifica sul 
     struct flock fl = {};
-    fl.l_type = F_WRLCK;
-    fl.l_whence = SEEK_SET;
+    fl.l_type = F_WRLCK;  //se qualcuno vuole leggere può operare in concorrenza sul file 
+    fl.l_whence = SEEK_SET;  
     fl.l_start = 0;
-    fl.l_len = 0;
+    fl.l_len = 0; //quale parte del file voglio dare il lock, in questo caso tutto il file (default = 0)
 
     if (fcntl(fd, F_SETLKW, &fl) == -1) {  
         perror("fcntl");
