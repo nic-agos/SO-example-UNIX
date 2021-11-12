@@ -12,6 +12,8 @@ void printB(){
 	printf("B\n");
 }
 
+/* i due thread in concorrenza vogliono catturare lo stesso evento (SIGINT), solo uno dei due a 
+ regime verrà utilizzato, l'ultimo che è stato impostato*/
 void *generic_threadA(){
 	signal(SIGINT,printA);
 	while(1) {
@@ -40,10 +42,8 @@ int main(int argc, char **argv){
 
 
   while(1) {
-	pause();
-	printf("I'm thread main\n");
+	pause();  //lo sblocco avviene solo in caso di una segnalazione che il thread main riceve
+	printf("I'm thread main\n"); 
   }
-
-
 
 }

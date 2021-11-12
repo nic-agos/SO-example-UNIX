@@ -13,10 +13,14 @@ void printdata(int sgnumber){
 int main (int argc, char**argv){
 
 	unsigned int i = 0;
-	signal(SIGINT, printdata);
+	signal(SIGINT, printdata); /*stiamo cercando di gestire il segnale emanato da ctrl+C*/ 
 
 	while (1){
-		a = b = c = d = e = f = (++i)%1024; 	
+		/*non uso syscall quindi non chiamo il kernel ma lavoro in user space*/
+		/*non è un'istruzione atomica ma un blocco di istruzioni quindi potrebbe succedere che non riesco ad eseguire 
+		 tutte le operazioni prima dell'avvenimento di un evento quindi le variabili potrebbero avere valori differenti*/
+		a = b = c = d = e = f = (++i)%1024;
 	}	
 
+	/*per uscire da questa applicazione uso ctrl+\*/ 
 }

@@ -7,6 +7,6 @@ int main(){
   int pid;
 
   scanf("%d",&pid);
-  printf("killing %d - res is %d\n",pid,kill(pid,SIGINT));
+  printf("killing %d - res is %d\n", pid, kill(pid,SIGINT)); //emano il segnale SIGINT quando killo il processo
 
 }

@@ -21,27 +21,27 @@ int main(int argc, char **argv){
   struct sigaction act;
 
 
-  sigfillset(&set);
+  sigfillset(&set);  //riempio tutti i campi della bitmask
 
-  act.sa_sigaction = generic_handler; 
-  act.sa_mask =  set;
+  act.sa_sigaction = generic_handler; //specifico il gestore del segnale
+  act.sa_mask =  set;  //indico i segnali bloccati quando il gestore esegue (tutti bloccati in questo caso)
   act.sa_flags = SA_SIGINFO;
-  act.sa_restorer = NULL;
+  act.sa_restorer = NULL;  //campo obsoleto
   sigaction(SIGINT,&act,NULL);
 
 
 
-  sigprocmask(SIG_BLOCK,&set,NULL);
+  sigprocmask(SIG_BLOCK,&set,NULL); //blocco nuovamente tutti i segnali
 
   while(1) {
-	sleep(SLEEP_PERIOD);
-	sigpending(&set);
-	if(sigismember(&set,SIGINT)){
-	  sigemptyset(&set);
-	  sigaddset(&set,SIGINT);
-	  sigprocmask(SIG_UNBLOCK,&set,NULL);
-	  sigprocmask(SIG_BLOCK,&set,NULL);
-	}
+  	sleep(SLEEP_PERIOD);
+  	sigpending(&set);
+  	if(sigismember(&set,SIGINT)){
+  	  sigemptyset(&set); //svuoto la bitmask
+  	  sigaddset(&set,SIGINT); //imposto 
+  	  sigprocmask(SIG_UNBLOCK,&set,NULL); //sbolocco SIGINT
+      /*se un segnale di tipo SIGINT era pendente do la possibilità di eseguire il gestore di tale evento e poi riblocco l'evento*/
+  	  sigprocmask(SIG_BLOCK,&set,NULL); //blocco di nuovo la SIGINT
+	  }
   }
-
 }

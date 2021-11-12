@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    // vogliamo attuare una gestione specifica sul 
+    // vogliamo attuare una gestione specifica sul file
     struct flock fl = {};
     fl.l_type = F_WRLCK;  //se qualcuno vuole leggere può operare in concorrenza sul file 
     fl.l_whence = SEEK_SET;  
