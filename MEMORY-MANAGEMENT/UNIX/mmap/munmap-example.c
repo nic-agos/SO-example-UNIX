@@ -18,14 +18,14 @@ int main(int argc, char** arv){
 		return -1;
 	}
 
-	ret = munmap(buffer,PAGE_SIZE);//unmapping the initial page of the map
+	ret = munmap(buffer,PAGE_SIZE); //unmap della pagina iniziale dell'area mappata in buffer
 
 	if (ret == -1){
 		printf("munmap error\n");
 		return -1;
 	}
 
-	//using the still mapped pages
+	// utilizzo la parte di memoria che è ancora mapppata
 	scanf("%s",buffer+PAGE_SIZE);
 	printf("%s\n",buffer+PAGE_SIZE);
 

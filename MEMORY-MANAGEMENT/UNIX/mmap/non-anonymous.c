@@ -13,44 +13,45 @@ int gets(char*);
 
 int main(int argc, char** argv){
 
- void*addr, *oldboundary;
- int i;
- int fd;
+    void*addr, *oldboundary;
+    int i;
+    int fd;
 
- addr = oldboundary = (void*)sbrk(0);
-// printf("old program boundary is at address %x (boundary page number is %d)\n",(unsigned)addr, (unsigned)addr/(unsigned)PAGE_SIZE);
+    addr = oldboundary = (void*)sbrk(0);
+//  printf("old program boundary is at address %x (boundary page number is %d)\n",(unsigned)addr, (unsigned)addr/(unsigned)PAGE_SIZE);
 
 
 
 #ifndef FILE_MAP
- mmap(addr,PAGE_SIZE,PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS|MAP_FIXED,fd,0);
- sprintf(addr,"ciao");
+    mmap(addr,PAGE_SIZE,PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS|MAP_FIXED,fd,0); //mappo la memoria in maniera anonima
+    sprintf(addr,"ciao");  //scrivo sul buffer adr la stringa ciao
 #else
- if(!argv[1]){
-	printf("file name not supplied\n");
-	exit(1);
- }
- fd = open(argv[1],O_RDWR);
- addr =  mmap(0,PAGE_SIZE,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+    if(!argv[1]){
+        printf("file name not supplied\n");
+        exit(1);
+    }
+
+    fd = open(argv[1],O_RDWR);
+    addr =  mmap(0,PAGE_SIZE,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);  //mappo una sola pagina con il contenuto di un certo file, se il file è vuoto ho segfault
 #endif
 
- if (addr == NULL){
-	printf("mmap failure\n");
-	exit(-1);
- }
+    if (addr == NULL){
+        printf("mmap failure\n");
+        exit(-1);
+    }
 
+    if(fork()){  // sono nel parent
+        while(1){
+            gets((char*)addr);
+        }
+    }else{ // sono nel child
 
-
- if(fork()){
-	while(1)
-	gets((char*)addr);
- }
- else{
-	i = 0;
-	while(1){
-		sleep(2);
-		printf("round %d - buffer content is: %s\n",i++,(char*)addr);
-	}
- }
+        i = 0;
+        while(1){
+            sleep(2);
+            printf("round %d - buffer content is: %s\n",i++,(char*)addr);
+            fflush(stdout);
+        }
+    }
 }
 

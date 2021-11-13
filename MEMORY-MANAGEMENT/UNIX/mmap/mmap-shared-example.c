@@ -16,8 +16,8 @@ int main(int argc, char** arv){
 	pid_t pid;
 	char* buffer;
         
-
-	buffer = (char*)mmap(NULL,PAGE_SIZE*NUM_TARGET_PAGES,PROT_READ|PROT_WRITE,MAP_ANONYMOUS|MAP_SHARED,0,0);
+	// MAP_SHARED quindi il child può utilizzare questa zona mappata, buffer punterà alla prima pagina mappata
+	buffer = (char*)mmap(NULL,PAGE_SIZE*NUM_TARGET_PAGES, PROT_READ|PROT_WRITE, MAP_ANONYMOUS|MAP_SHARED, 0, 0);
 	if (buffer == NULL){
 		printf("mmap error\n");
 		return -1;
@@ -32,13 +32,13 @@ int main(int argc, char** arv){
 
 	}
 
-	if(pid == 0){
+	if(pid == 0){  //sono nel child
 		printf("give me a string:\n");
 		gets(buffer);
 		return 0;
 	}	
 	
-	wait(NULL);
+	wait(NULL); //sono nel parent, aspetto il child
 
 	printf("%s\n",buffer);
 
